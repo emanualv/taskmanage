@@ -16,13 +16,11 @@ export default function AddTask() {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
   const handlePersonSelect = (name) => {
     setPersonInput(name);
     setForm({ ...form, assignedTo: name });
     setShowSuggestions(false);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     await addTask(form);
@@ -32,17 +30,16 @@ export default function AddTask() {
   const filteredPeople = people.filter((p) =>
     p.toLowerCase().includes(personInput.toLowerCase())
   );
-
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="max-w-md mx-auto px-4 py-6">
+    <div className="w-full max-w-md mx-auto px-4 sm:px-6 py-6">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-6 text-center sm:text-left">
         <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900">
           Add New Task
         </h1>
-        <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mt-2"></div>
+        <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mt-2 mx-auto sm:mx-0"></div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -72,15 +69,15 @@ export default function AddTask() {
         </div>
 
         {/* Status Buttons */}
-        <div className="space-y-1">
+        <div>
           <label className="text-sm font-medium text-gray-600">Status</label>
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex flex-wrap gap-2 mt-1">
             {["pending", "in-progress", "completed"].map((status) => (
               <button
                 key={status}
                 type="button"
                 onClick={() => setForm({ ...form, status })}
-                className={`px-4 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
+                className={`px-4 py-1 rounded-full text-sm font-medium transition-colors duration-200 flex-1 text-center min-w-[100px] ${
                   form.status === status
                     ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -122,7 +119,7 @@ export default function AddTask() {
           </div>
 
           {showSuggestions && personInput && (
-            <div className="absolute z-10 w-full mt-1 bg-gray-50 rounded-xl shadow-lg border border-gray-200 overflow-hidden text-sm">
+            <div className="absolute z-10 w-full mt-1 bg-gray-50 rounded-xl shadow-lg border border-gray-200 overflow-hidden text-sm max-h-40 overflow-y-auto">
               {filteredPeople.map((person, idx) => (
                 <div
                   key={idx}
@@ -137,7 +134,7 @@ export default function AddTask() {
         </div>
 
         {/* Submit Button */}
-        <div className="mt-2">
+        <div>
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
