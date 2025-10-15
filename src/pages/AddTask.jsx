@@ -15,9 +15,7 @@ export default function AddTask() {
   const [personInput, setPersonInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handlePersonSelect = (name) => {
     setPersonInput(name);
@@ -35,22 +33,21 @@ export default function AddTask() {
     p.toLowerCase().includes(personInput.toLowerCase())
   );
 
-  // Get today's date in YYYY-MM-DD format for the date input min attribute
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="px-4 py-2">
+    <div className="max-w-md mx-auto px-4 py-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Add Task
-          <div className="w-20 h-1 bg-blue-600 rounded-full mt-2"></div>
+        <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900">
+          Add New Task
         </h1>
+        <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mt-2"></div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Task Title */}
-        <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+        <div className="bg-gray-50 rounded-xl p-3 shadow-sm border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400">
           <input
             type="text"
             name="title"
@@ -58,131 +55,96 @@ export default function AddTask() {
             onChange={handleChange}
             placeholder="Task Title"
             required
-            className="w-full text-lg font-medium placeholder-gray-400 focus:outline-none"
+            className="w-full text-base placeholder-gray-500 focus:outline-none bg-transparent"
           />
         </div>
 
         {/* Description */}
-        <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+        <div className="bg-gray-50 rounded-xl p-3 shadow-sm border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400">
           <textarea
             name="description"
             value={form.description}
             onChange={handleChange}
             placeholder="Add description..."
             rows="3"
-            className="w-full text-base placeholder-gray-400 focus:outline-none resize-none"
+            className="w-full text-sm placeholder-gray-500 focus:outline-none resize-none bg-transparent"
           />
         </div>
 
-        {/* Quick Status Buttons */}
-        <div className="space-y-2">
+        {/* Status Buttons */}
+        <div className="space-y-1">
           <label className="text-sm font-medium text-gray-600">Status</label>
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {['pending', 'in-progress', 'completed'].map((status) => (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {["pending", "in-progress", "completed"].map((status) => (
               <button
                 key={status}
                 type="button"
                 onClick={() => setForm({ ...form, status })}
-                className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium ${
+                className={`px-4 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
                   form.status === status
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-600'
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
-                {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
+                {status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ")}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Due Date with Calendar Icon */}
-        <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center">
-            <svg
-              className="w-5 h-5 text-gray-400 mr-2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <input
-              type="date"
-              name="date"
-              value={form.date}
-              min={today}
-              onChange={handleChange}
-              className="w-full focus:outline-none text-gray-600"
-            />
-          </div>
+        {/* Due Date */}
+        <div className="bg-gray-50 rounded-xl p-3 shadow-sm border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400 flex items-center gap-2">
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            min={today}
+            onChange={handleChange}
+            className="w-full text-sm focus:outline-none bg-transparent"
+          />
         </div>
 
-        {/* Assigned To with Autocomplete */}
+        {/* Assigned To */}
         <div className="relative">
-          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center">
-              <svg
-                className="w-5 h-5 text-gray-400 mr-2"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              <input
-                type="text"
-                value={personInput}
-                onChange={(e) => {
-                  setPersonInput(e.target.value);
-                  setForm({ ...form, assignedTo: e.target.value });
-                  setShowSuggestions(true);
-                }}
-                onFocus={() => setShowSuggestions(true)}
-                placeholder="Assign to..."
-                className="w-full focus:outline-none"
-              />
-            </div>
+          <div className="bg-gray-50 rounded-xl p-3 shadow-sm border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400 flex items-center gap-2">
+            <input
+              type="text"
+              value={personInput}
+              onChange={(e) => {
+                setPersonInput(e.target.value);
+                setForm({ ...form, assignedTo: e.target.value });
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              placeholder="Assign to..."
+              className="w-full text-sm focus:outline-none bg-transparent"
+            />
           </div>
 
-          {/* Suggestions Dropdown */}
           {showSuggestions && personInput && (
-            <div className="absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
+            <div className="absolute z-10 w-full mt-1 bg-gray-50 rounded-xl shadow-lg border border-gray-200 overflow-hidden text-sm">
               {filteredPeople.map((person, idx) => (
                 <div
                   key={idx}
-                  className="px-4 py-3 hover:bg-gray-50 active:bg-gray-100 cursor-pointer flex items-center space-x-3"
+                  className="px-3 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-150"
                   onClick={() => handlePersonSelect(person)}
                 >
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-blue-600 font-medium">
-                      {person.charAt(0)}
-                    </span>
-                  </div>
-                  <span className="text-gray-700">{person}</span>
+                  {person}
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* Submit Button - Fixed at Bottom */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+        {/* Submit Button */}
+        <div className="mt-2">
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-medium py-3 rounded-lg shadow-md active:bg-blue-700 transform active:scale-[0.98] transition-all"
+            className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
           >
             Add Task
           </button>
         </div>
-        
-        {/* Spacer for fixed button */}
-        <div className="h-20"></div>
       </form>
     </div>
   );
