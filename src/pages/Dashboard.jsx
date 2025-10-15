@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { getTasks } from "../api/tasks";
-import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
@@ -16,7 +15,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-2 sm:p-4 md:p-6">
-      {/* Header with Add button */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
         <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 tracking-tight text-center sm:text-left">
           Dashboard
@@ -46,7 +45,6 @@ export default function Dashboard() {
       {/* Task List */}
       {tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-       
           <p className="text-lg font-medium">No tasks yet</p>
           <p className="text-sm mt-1">Add a new one to get started</p>
         </div>
@@ -63,6 +61,13 @@ export default function Dashboard() {
               <p className="text-gray-600 text-sm line-clamp-3 mb-3">
                 {task.description || "No description provided."}
               </p>
+
+              {/* Assigned Person */}
+              {task.assignedTo && (
+                <p className="text-gray-700 text-sm mb-2">
+                  👤 Assigned to: <span className="font-medium">{task.assignedTo}</span>
+                </p>
+              )}
 
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500">🗓 {task.date || "No date"}</span>
