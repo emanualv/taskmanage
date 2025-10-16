@@ -33,6 +33,8 @@ export default function Clients({ addNewClient }) {
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
     handleClear();
+    console.log(`addNewClient called with: ${JSON.stringify(client)}`);
+    
   };
 
   const handleClear = () => {

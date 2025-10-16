@@ -72,11 +72,18 @@ const PageWrapper = ({ children }) => (
 
 // Main App Component
 export default function App() {
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState(() => {
+  const saved = localStorage.getItem("clients");
+  return saved ? JSON.parse(saved) : [];
+});
 
-  const addNewClient = (client) => {
-    setClients((prev) => [...prev, client]);
-  };
+const addNewClient = (client) => {
+  setClients((prev) => {
+    const updated = [...prev, client];
+    localStorage.setItem("clients", JSON.stringify(updated));
+    return updated;
+  });
+};
 
   const floatingShapes = useMemo(
     () =>

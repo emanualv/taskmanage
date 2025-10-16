@@ -2,6 +2,8 @@ import React from "react";
 import { Edit2, Trash2 } from "lucide-react";
 
 export default function ClientList({ clients }) {
+  console.log(clients);
+  
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">
