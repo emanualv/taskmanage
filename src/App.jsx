@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import AddTask from "./pages/AddTask";
@@ -63,27 +63,36 @@ function Navbar() {
   );
 }
 
-// Page Wrapper for consistent styling
+// Page Wrapper
 const PageWrapper = ({ children }) => (
-  <div className="bg-white/95 shadow-2xl rounded-2xl p-5 sm:p-10 border border-gray-100 transition-transform hover:scale-[1.01] duration-300">
+  <div className="bg-white/95 shadow-2xl rounded-2xl p-5 sm:p-10 border border-gray-100 pt-20">
     {children}
   </div>
 );
 
-// Main App Component
 export default function App() {
-  const [clients, setClients] = useState(() => {
-  const saved = localStorage.getItem("clients");
-  return saved ? JSON.parse(saved) : [];
-});
+  const [clients, setClients] = useState([]);
 
-const addNewClient = (client) => {
-  setClients((prev) => {
-    const updated = [...prev, client];
-    localStorage.setItem("clients", JSON.stringify(updated));
-    return updated;
-  });
-};
+  // Fetch clients from API
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await fetch("https://cms.disagglobal.com/api/users");
+        const result = await response.json();
+        if (result.success) {
+          setClients(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching clients:", error);
+      }
+    };
+    fetchClients();
+  }, []);
+
+  // Add client locally
+  const addNewClient = (client) => {
+    setClients((prev) => [...prev, client]);
+  };
 
   const floatingShapes = useMemo(
     () =>
@@ -104,7 +113,6 @@ const addNewClient = (client) => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-500 via-teal-400 to-gray-100">
-      {/* Floating shapes */}
       {floatingShapes.map((shape, idx) => (
         <div
           key={idx}
@@ -152,14 +160,15 @@ const addNewClient = (client) => {
                 </PageWrapper>
               }
             />
-            <Route
-              path="/client-list"
-              element={
-                <PageWrapper>
-                  <ClientList clients={clients} />
-                </PageWrapper>
-              }
-            />
+        <Route
+  path="/client-list"
+  element={
+    <PageWrapper>
+      <ClientList clients={clients} /> {/* pass clients state directly */}
+    </PageWrapper>
+  }
+/>
+
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
