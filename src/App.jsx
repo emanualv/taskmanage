@@ -5,7 +5,6 @@ import AddTask from "./pages/AddTask";
 import Clients from "./pages/Clients";
 import ClientList from "./pages/ClientList";
 
-// Navbar Component
 function Navbar() {
   const [clientMenuOpen, setClientMenuOpen] = useState(false);
 
