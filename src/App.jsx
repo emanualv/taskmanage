@@ -27,7 +27,7 @@ function Navbar() {
           href="/add"
           className="text-gray-700 hover:text-blue-600 font-medium text-base sm:text-lg transition-colors duration-200"
         >
-          Task
+          Tasks
         </a>
 
         {/* Clients Dropdown */}

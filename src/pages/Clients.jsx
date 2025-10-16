@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Save, X, Check } from "lucide-react";
 
 export default function Clients({ addNewClient }) {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
-    fullName: "",
+  const [formData, setFormData] = useState({
+    name: "",
     pan: "",
     mobile: "",
     email: "",
@@ -14,22 +13,31 @@ export default function Clients({ addNewClient }) {
     age: "",
     profession: "",
     location: "",
-    distance: "",
-    interest: "",
-    manager: "",
-    remarks: "",
+    distanceFromThrissur: "",
+    interestedIn: "",
+    managedBy: "",
+    otherRemarks: "",
   });
-  const [notification, setNotification] = useState("");
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addNewClient(form); // Add to client list in App.jsx or context
-    setNotification("New client added successfully!");
-    setForm({
-      fullName: "",
+    const client = { ...formData, id: Date.now().toString() };
+    addNewClient(client); // <-- Make sure this is called
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+    handleClear();
+  };
+
+  const handleClear = () => {
+    setFormData({
+      name: "",
       pan: "",
       mobile: "",
       email: "",
@@ -39,70 +47,187 @@ export default function Clients({ addNewClient }) {
       age: "",
       profession: "",
       location: "",
-      distance: "",
-      interest: "",
-      manager: "",
-      remarks: "",
+      distanceFromThrissur: "",
+      interestedIn: "",
+      managedBy: "",
+      otherRemarks: "",
     });
-    setTimeout(() => {
-      setNotification("");
-      navigate("/client-list");
-    }, 1500);
   };
 
   return (
-    <div className="w-full max-w-md sm:max-w-lg mx-auto px-4 sm:px-6 py-6">
-      <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+      {/* Page Heading */}
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">
         Add New Client
       </h1>
-      <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mb-6"></div>
 
-      {notification && (
-        <div className="mb-4 text-green-700 bg-green-100 p-2 rounded-lg text-center">
-          {notification}
+      {showSuccess && (
+        <div className="fixed top-20 right-4 sm:right-8 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-pulse z-50">
+          <Check className="w-5 h-5" />
+          <span className="text-sm sm:text-base font-medium">Client added successfully!</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-        {[
-          { name: "fullName", placeholder: "Full Name *", required: true },
-          { name: "pan", placeholder: "PAN Number *", required: true },
-          { name: "mobile", placeholder: "Mobile Number *", required: true },
-          { name: "email", placeholder: "Email Address" },
-          { name: "address1", placeholder: "Address Line 1 *", required: true },
-          { name: "address2", placeholder: "Address Line 2" },
-          { name: "address3", placeholder: "Address Line 3" },
-          { name: "age", placeholder: "Age", type: "number" },
-          { name: "profession", placeholder: "Profession" },
-          { name: "location", placeholder: "Location" },
-          { name: "distance", placeholder: "Distance from Thrissur (km)" },
-          { name: "interest", placeholder: "Interested In" },
-          { name: "manager", placeholder: "Managed By" },
-        ].map((field) => (
-          <input
-            key={field.name}
-            type={field.type || "text"}
-            name={field.name}
-            value={form[field.name]}
-            onChange={handleChange}
-            placeholder={field.placeholder}
-            required={field.required || false}
-            className="w-full p-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
-          />
-        ))}
-
-        <textarea
-          name="remarks"
-          placeholder="Other Remarks"
-          value={form.remarks}
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 bg-white shadow-lg rounded-2xl p-4 sm:p-6 border border-gray-200"
+      >
+        {/* Name */}
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          required
+          value={formData.name}
           onChange={handleChange}
-          rows="3"
-          className="w-full p-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-400 text-sm sm:text-base resize-none"
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
         />
 
-        <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95">
-          Save Client
-        </button>
+        {/* PAN */}
+        <input
+          type="text"
+          name="pan"
+          placeholder="PAN Number"
+          required
+          value={formData.pan}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Mobile */}
+        <input
+          type="text"
+          name="mobile"
+          placeholder="Mobile Number"
+          required
+          value={formData.mobile}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Email */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Address */}
+        <input
+          type="text"
+          name="address1"
+          placeholder="Address Line 1"
+          required
+          value={formData.address1}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+        <input
+          type="text"
+          name="address2"
+          placeholder="Address Line 2"
+          value={formData.address2}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+        <input
+          type="text"
+          name="address3"
+          placeholder="Address Line 3"
+          value={formData.address3}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Age */}
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          value={formData.age}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Profession */}
+        <input
+          type="text"
+          name="profession"
+          placeholder="Profession"
+          value={formData.profession}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Location */}
+        <input
+          type="text"
+          name="location"
+          placeholder="Location"
+          value={formData.location}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Distance */}
+        <input
+          type="number"
+          name="distanceFromThrissur"
+          placeholder="Distance from Thrissur"
+          value={formData.distanceFromThrissur}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Interested In */}
+        <input
+          type="text"
+          name="interestedIn"
+          placeholder="Interested In"
+          value={formData.interestedIn}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Managed By */}
+        <input
+          type="text"
+          name="managedBy"
+          placeholder="Managed By"
+          value={formData.managedBy}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Other Remarks */}
+        <textarea
+          name="otherRemarks"
+          placeholder="Other Remarks"
+          rows="4"
+          value={formData.otherRemarks}
+          onChange={handleChange}
+          className="w-full col-span-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+        />
+
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 col-span-full">
+          <button
+            type="submit"
+            className="flex-1 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
+            <Save className="w-5 h-5" /> Save Client
+          </button>
+          <button
+            type="button"
+            onClick={handleClear}
+            className="flex-1 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
+            <X className="w-5 h-5" /> Clear
+          </button>
+        </div>
       </form>
     </div>
   );
