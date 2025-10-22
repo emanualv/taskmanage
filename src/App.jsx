@@ -77,9 +77,10 @@ export default function App() {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await fetch("/api/clients");
+        const response = await fetch("https://cms.disagglobal.com/api/users");
         const result = await response.json();
         if (result.success) {
+          console.log("Fetched clients:", result.data);
           setClients(result.data);
         }
       } catch (error) {
